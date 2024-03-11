@@ -2,7 +2,7 @@
 
 This repository documents the code used for the numerical illustration in the paper
 
-> Florian Messerer, Katrin Baumgärtner, Sergio Luca, Moritz Diehl. Fourth-order suboptimality of nominal model predictive control in the presence of uncertainty. 
+> Florian Messerer, Katrin Baumgärtner, Sergio Luca, Moritz Diehl. Fourth-order suboptimality of nominal model predictive control in the presence of uncertainty. https://arxiv.org/abs/2403.04559. 
 
 ## Overview
 
