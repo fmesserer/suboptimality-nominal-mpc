@@ -47,6 +47,7 @@ class SolverTreeMPC():
         self.success = False
         self._sol = None
 
+
     def _build_solver(self) -> None:
 
         f_func = ca.Function("f_func", [self.problem.x, self.problem.u, self.problem.w, self.problem.p], [self.problem.f_expr])
@@ -137,11 +138,18 @@ class SolverTreeMPC():
             else:
                 self._sol = self._solver(x0=self._sol["x"], p=p, lbx=self._lbx, ubx=self._ubx, lbg=self._lbg, ubg=self._ubg)
 
+        return_status = self._solver.stats()["return_status"]
         self.success = self._solver.stats()["success"]
+
+        # also catches minor things like "solved to acceptable level"
+        if return_status != "Solve_Succeeded":
+            print("return status:", return_status)
+
+        # if the solver fully fails
         if not self.success:
             print("solver failed")
-            print(self._solver.stats()["return_status"])
             return np.nan * np.ones(self.problem.nu)
+
         return self.u0
 
     @property
@@ -193,12 +201,13 @@ def tree_to_scenario(tree: List[List[np.ndarray]]) -> List[np.ndarray]:
 
     N = len(tree)
     m = len(tree[1])
-    n_scen = m**N
+    n_scen = m**(N-1)
 
     scenarios = []
     for i in range(n_scen):
         scen = np.zeros((tree[0][0].shape[0], N))
         for k in range(N):
-            scen[:, k] = tree[k][i // (m**(N-k) )]
+            scen[:, k] = tree[k][i // (m**(N-k-1) )]
         scenarios.append(scen)
+
     return scenarios

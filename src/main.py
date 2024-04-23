@@ -39,11 +39,11 @@ plot_stage_state_cost(prob_nom, saveas=plotfolder + "stage_cost_state.pdf", show
 
 #%% compute delta u0 and suboptimality of CEC as function of sigma, for several values of x
 policy_cec = PolicyCEC(prob_nom)
-sig_vals = np.logspace(-6, -.5, 20)
+sig_vals = np.logspace(-6, 0, 20)
 x_vals = [-.2, -.1, 0, .5, 1]
 
 if run_experiments:
-    results = run_experiment_subopt(sig_vals, x_vals, prob_stoch, policy_cec, solver_stoch, saveas=resultsfolder + "subopt_many_xval.pkl")
+    results = run_experiment_subopt(sig_vals, x_vals, prob_stoch, policy_subopt=policy_cec, solver_opt=solver_stoch, saveas=resultsfolder + "subopt_many_xval.pkl")
 results = ResultsValFunc.load(resultsfolder + "subopt_many_xval.pkl")
 plot_suboptimality_and_delta_u0(results, saveas=plotfolder + "suboptimality_and_delta_u0.pdf", show=False)
 
@@ -53,7 +53,7 @@ sig_vals = [.05, .1]
 
 if run_experiments:
     results_nom = run_experiment_subopt([0], x_vals, None, None, solver_opt=solver_nom, eval_subopt=False, saveas=resultsfolder + "valfunc_nom.pkl")
-    results     = run_experiment_subopt(sig_vals, x_vals, prob_stoch, policy_cec, solver_stoch, saveas=resultsfolder + "valfunc_several_sig.pkl")
+    results     = run_experiment_subopt(sig_vals, x_vals, prob_stoch, policy_subopt=policy_cec, solver_opt=solver_stoch, saveas=resultsfolder + "valfunc_several_sig.pkl")
 results_nom = ResultsValFunc.load(resultsfolder + "valfunc_nom.pkl")
 results     = ResultsValFunc.load(resultsfolder + "valfunc_several_sig.pkl")
 plot_valfunc_and_policy(prob_stoch, results, results_nom=results_nom, plot_stage_cost=True, saveas=plotfolder + "valfunc.pdf", show=False)
